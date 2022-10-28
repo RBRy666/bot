@@ -1,11 +1,24 @@
 import telebot
 from telebot import types
 bot = telebot.TeleBot('5780986973:AAGlUFYtbCz6elWTsgEjjdXz1ILIw1yJUHI')
+import sys
+import logging
+
+logger = logging.getLogger('')
+logger.setLevel(logging.DEBUG)
+fh = logging.FileHandler('my_log_info.log')
+sh = logging.StreamHandler(sys.stdout)
+formatter = logging.Formatter('[%(asctime)s] %(levelname)s [%(filename)s.%(funcName)s:%(lineno)d] %(message)s', datefmt='%a, %d %b %Y %H:%M:%S')
+fh.setFormatter(formatter)
+sh.setFormatter(formatter)
+logger.addHandler(fh)
+logger.addHandler(sh)
 
 @bot.message_handler(commands=['start'])
 def start(message):
     user = f'Hi, {message.from_user.first_name}'
     bot.send_message(message.chat.id, user)
+    logging.debug(f'User: {message.from_user.first_name} started')
 
 # @bot.message_handler()
 # def get_user_text(message):
@@ -36,6 +49,7 @@ def help(message):
     start = types.KeyboardButton("Start")
     markup.add(site, start)
     bot.send_message(message.chat.id, "Press one of buttons", reply_markup=markup)
+    logging.debug(f'User: {message.from_user.first_name} started')
 
 bot.polling(none_stop=True)
 
